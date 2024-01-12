@@ -38,31 +38,34 @@ def generate_qr_code(data, save_path, box_size, border):
         print(f"Error generating QR Code: {str(e)}")
 
 def set_directory():
-    print('Enter path to vcards: ')
-    file_path = input()
+    file_path = input('Enter path to vcards: ')
+    try:
 
-    vcf_string = read_vcf_file(file_path)
+        vcf_string = read_vcf_file(file_path)
 
-    file_list = list_files_in_directory(file_path)
+        file_list = list_files_in_directory(file_path)
 
-    for file_name in file_list:
-        next_file = os.path.join(file_path, file_name)
+        for file_name in file_list:
+            next_file = os.path.join(file_path, file_name)
 
-        vcf_string = read_vcf_file(next_file)
+            vcf_string = read_vcf_file(next_file)
 
-        if not vcf_string.startswith("Error"):
-            print("Read VCF Successfully")
+            if not vcf_string.startswith("Error"):
+                print("Read VCF Successfully")
 
-            file_name_without_extension = os.path.splitext(file_name)[0]
+                file_name_without_extension = os.path.splitext(file_name)[0]
 
-            qr_code_save_path = f"/home/csaenz/vCard/qr-code/qr-codes/{file_name_without_extension}.png"
+                # TODO: this needs to work with user input
+                qr_code_save_path = f"{file_path}/{file_name_without_extension}.png"
 
-            generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
+                generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
 
-            print(f"QR Code saved at: {qr_code_save_path}")
-        else:
-            print(vcf_string)
+                print(f"QR Code saved at: {qr_code_save_path}")
+            else:
+                print(vcf_string)
+    except Exception as e:
+        print(f"Error setting directory: {str(e)}")
 
-
-if __main__:
+if __main__ = "__main__":
+    print("Loading script: ")
     set_directory()
