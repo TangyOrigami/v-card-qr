@@ -38,7 +38,8 @@ def generate_qr_code(data, save_path, box_size, border):
         print(f"Error generating QR Code: {str(e)}")
 
 def set_directory():
-    file_path = input('Enter path to vcards: ')
+    print('Enter path to vcards: ')
+    file_path = input()
     try:
 
         vcf_string = read_vcf_file(file_path)
@@ -56,16 +57,14 @@ def set_directory():
                 file_name_without_extension = os.path.splitext(file_name)[0]
 
                 # TODO: this needs to work with user input
-                qr_code_save_path = f"{file_path}/{file_name_without_extension}.png"
+                qr_code_save_path = f"qr_codes/{file_name_without_extension}.png"
 
                 generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
-
-                print(f"QR Code saved at: {qr_code_save_path}")
             else:
                 print(vcf_string)
     except Exception as e:
         print(f"Error setting directory: {str(e)}")
 
-if __main__ = "__main__":
+if __name__ == "__main__":
     print("Loading script: ")
     set_directory()
