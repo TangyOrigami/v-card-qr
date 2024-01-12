@@ -20,37 +20,49 @@ def read_vcf_file(file_path):
         return f"An error occurred: {str(e)}"
 
 def generate_qr_code(data, save_path, box_size, border):
-    qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=box_size,
-            border=border,
-            )
-    qr.add_data(data)
-    qr.make(fit=True)
+    try:
+        qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=box_size,
+                border=border,
+                )
+        qr.add_data(data)
+        qr.make(fit=True)
 
-    img = qr.make_image(fill_color="black", back_color="white")
-    img.save(save_path)
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(save_path)
 
-file_path = "/home/csaenz/vCard/qr-code/cards/"
-vcf_string = read_vcf_file(file_path)
+        print(f"QR Code saved at: {save_path}")
+    except Exception as e:
+        print(f"Error generating QR Code: {str(e)}")
 
-file_list = list_files_in_directory(file_path)
+def set_directory():
+    print('Enter path to vcards: ')
+    file_path = input()
 
-for file_name in file_list:
-    next_file = os.path.join(file_path, file_name)
+    vcf_string = read_vcf_file(file_path)
 
-    vcf_string = read_vcf_file(next_file)
+    file_list = list_files_in_directory(file_path)
 
-    if not vcf_string.startswith("Error"):
-        print("Read VCF Successfully")
+    for file_name in file_list:
+        next_file = os.path.join(file_path, file_name)
 
-        file_name_without_extension = os.path.splitext(file_name)[0]
+        vcf_string = read_vcf_file(next_file)
 
-        qr_code_save_path = f"/home/csaenz/vCard/qr-code/qr-codes/{file_name_without_extension}.png"
+        if not vcf_string.startswith("Error"):
+            print("Read VCF Successfully")
 
-        generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
+            file_name_without_extension = os.path.splitext(file_name)[0]
 
-        print(f"QR Code saved at: {qr_code_save_path}")
-    else:
-        print(vcf_string)
+            qr_code_save_path = f"/home/csaenz/vCard/qr-code/qr-codes/{file_name_without_extension}.png"
+
+            generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
+
+            print(f"QR Code saved at: {qr_code_save_path}")
+        else:
+            print(vcf_string)
+
+
+if __main__:
+    set_directory()
