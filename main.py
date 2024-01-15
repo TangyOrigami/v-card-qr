@@ -15,6 +15,8 @@ def read_vcf_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as vcf_file:
             vcf_content = vcf_file.read()
+        # Add a way to handle the image and cut out the xml
+
         return vcf_content
     except FileNotFoundError:
         return f"Error: File not found at {file_path}"
@@ -30,7 +32,7 @@ def generate_qr_code(data, save_path, box_size, border):
                 border=border,
                 )
         qr.add_data(data)
-        qr.make(fit=True)
+        qr.make()
 
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(save_path)
@@ -58,7 +60,7 @@ def set_directory():
 
                     qr_code_save_path = f"qr_codes/{file_name_without_extension}.png"
 
-                    generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
+                    generate_qr_code(vcf_string, qr_code_save_path, box_size=1, border=1)
         except Exception as e:
             print(f"Error setting directory: {str(e)}")
     else:
