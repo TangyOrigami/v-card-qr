@@ -5,6 +5,8 @@ from PIL import Image
 def list_files_in_directory(file_path):
     try:
         files = [f for f in os.listdir(file_path) if os.path.isfile(os.path.join(file_path, f))]
+        if not files:
+            return None
         return files
     except Exception as e:
         return f"An error occurred while listing files: {str(e)}"
@@ -40,31 +42,28 @@ def generate_qr_code(data, save_path, box_size, border):
 def set_directory():
     print('Enter path to vcards: ')
     file_path = input()
-    try:
+    if os.path.isdir(file_path):
+        try:
+            file_list = list_files_in_directory(file_path)
 
-        vcf_string = read_vcf_file(file_path)
+            for file_name in file_list:
+                next_file = os.path.join(file_path, file_name)
 
-        file_list = list_files_in_directory(file_path)
+                vcf_string = read_vcf_file(next_file)
 
-        for file_name in file_list:
-            next_file = os.path.join(file_path, file_name)
+                if not vcf_string.startswith("Error"):
+                    print("Read VCF Successfully")
 
-            vcf_string = read_vcf_file(next_file)
+                    file_name_without_extension = os.path.splitext(file_name)[0]
 
-            if not vcf_string.startswith("Error"):
-                print("Read VCF Successfully")
+                    qr_code_save_path = f"qr_codes/{file_name_without_extension}.png"
 
-                file_name_without_extension = os.path.splitext(file_name)[0]
-
-                # TODO: this needs to work with user input
-                qr_code_save_path = f"qr_codes/{file_name_without_extension}.png"
-
-                generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
-            else:
-                print(vcf_string)
-    except Exception as e:
-        print(f"Error setting directory: {str(e)}")
+                    generate_qr_code(vcf_string, qr_code_save_path, box_size=3, border=1)
+        except Exception as e:
+            print(f"Error setting directory: {str(e)}")
+    else:
+        print('No such directory')
 
 if __name__ == "__main__":
-    print("Loading script: ")
+    print("Loading script...")
     set_directory()
