@@ -1,4 +1,4 @@
-#I don't know what I'm doing...yet
+# I don't know what I'm doing...yet
 
 Activate venv:
     $: source bin/activate
